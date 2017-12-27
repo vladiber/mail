@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Check</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    
+  </head>
+  <body>
+    <div class="container">
+     
+      <p>Encrypted Files:</p>
+          <div class="container">
+            <div class="col-sm-4">
+              {% for n in my_list %}
+              <div class="row">
+                <div class="form-group">
+                  <label style="font-size:20px">{{n}}</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="in{{loop.index}}">
+                    <a class="btn btn-primary sub input-group-btn" id="{{loop.index}}" name="{{n}}">Submit <span class="glyphicon glyphicon-send"></span></a>
+                    <a class="btn btn-primary rej input-group-btn" id="rej{{loop.index}}" name="{{n}}">Reject <span class="glyphicon glyphicon-send"></span></a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>  
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script>
+      $(".sub").click(function(){
+        var result;
+        var pass = $(this).parent().find('input').val();
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+
+        $.getJSON('/check', {
+				  pass: pass,
+          id: id,
+          name: name
+				},  function(data) {
+          console.log(data);
+          if(data.result == true) {
+            $('#' + data.id).removeClass("btn-primary").addClass("btn-success").text("OK").attr('disabled','disabled');
+            $('#'+'in'+data.id).remove();
+            $('#'+'rej'+data.id).remove();
+
+          }
+          else {
+
+            $('#' + data.id).removeClass("btn-primary").addClass("btn-danger").text("Try Again");
+          }
+				});
+
+      })
+    </script>
+  </body>
+</html>
