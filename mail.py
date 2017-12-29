@@ -18,6 +18,7 @@ import uuid
 import Decrypt
 from tnefparse import TNEF
 from email.mime.text import MIMEText
+import socket
 
 class EmlServer(SMTPServer):
     no = 0
@@ -44,8 +45,9 @@ class EmlServer(SMTPServer):
         print a
 
 def extractAttachment(msg, dirname, uuid):
+    lip = socket.gethostbyname(socket.gethostname())
     an = 0
-    base_url = '''http://192.168.204.131:4000/'''
+    base_url = '''http://%s:4000/''' % lip
     FlagLink = False
     kuku = False
     #print msg.get_payload()
@@ -53,7 +55,7 @@ def extractAttachment(msg, dirname, uuid):
         i = 0
         if msgrep.is_multipart():
             payload=msgrep.get_payload()
-            link ="""<a href=3D"http://192.168.204.131:4000/""" + str(uuid)+ '''/show">Somae file are here </a></head>'''
+            link ="""<a href=3D"%s/%s/show">Somae file are here </a></head>""" % (base_url, str(uuid))
             newpayload = []
             q_att = []
             for attachment in payload:
@@ -148,5 +150,5 @@ def run():
     except KeyboardInterrupt:
         pass
 
-#if __name__ == '__main__':
-run()
+if __name__ == '__main__':
+    run()

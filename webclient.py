@@ -24,6 +24,21 @@ def index(elid):
         return render_template('wx.html')
     else:
         return render_template('show.html',my_list=a)
+@app.route('/config')
+def config():
+    conf = elastic.GetConfig(1)
+    lp = conf.local_port
+    nhp = conf.next_hop_port
+    nhh = conf.next_hop_host
+    return render_template('settings.html',lp=lp,nhp=nhp,nhh=nhh)
+
+@app.route('/saveset')
+def save():
+    lp = request.args.get('lport')
+    nhh = request.args.get('nhhost')
+    nhp = request.args.get('nhport')
+    a = elastic.WriteConfig(nhh,nhp,lp)
+    return json.dumps({"result":a})
 
 @app.route('/check')
 def check():

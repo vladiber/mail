@@ -2,6 +2,16 @@ from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Integer, Keyword, Text , Search ,Nested
 from elasticsearch_dsl.connections import connections
 
+class Config(DocType):
+    local_port = Keyword()
+    next_hop_port = Keyword()
+    next_hop_host = Keyword()
+
+    def save(self, ** kwargs):
+        return super(Config, self).save(** kwargs)
+    class Meta:
+        index = 'mail_conf'
+
 class Mail(DocType):
     mail_from = Text()
     attachments = Keyword()
@@ -68,3 +78,16 @@ def WriteES(mfrom,mto,mid,an):
     mail.sent_day = datetime.now()
     a = mail.save()
 
+def WriteConfig(nhhost,nhport,lport):
+    connections.create_connection(hosts=['192.168.204.131'])
+    conf = Config()
+    conf.next_hop_host = nhhost
+    conf.next_hop_port = nhport
+    conf.local_port  = lport
+    conf.meta.id = 1
+    a = conf.save()
+    
+def GetConfig(mid):
+    connections.create_connection(hosts=['localhost'])
+    conf = Config.get(id=1)
+    return conf
