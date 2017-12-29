@@ -44,7 +44,7 @@
 				},  function(data) {
           console.log(data);
           if(data.result == true) {
-            $('#' + data.id).removeClass("btn-primary").addClass("btn-success").text("OK").attr('disabled','disabled');
+            $('#' + data.id).removeClass("btn-primary").addClass("btn-success").text("SUCCESS").attr('disabled','disabled');
             $('#'+'in'+data.id).remove();
             $('#'+'rej'+data.id).remove();
 

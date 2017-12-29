@@ -1,0 +1,99 @@
+<html lang="en">
+    <head> 
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+		<!-- Website CSS style 
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+-->
+		<!-- Website Font style -->
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+		
+		<!-- Google Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+		<title>Admin</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row main">
+				<div class="panel-heading">
+	               <div class="panel-title text-center">
+	               		<h1 class="title">Settings</h1>
+	               		<hr />
+	               	</div>
+	            </div> 
+				<div class="main-center">
+					<form class="form-horizontal" method="post" action="#">
+						
+						<div class="form-group">
+							<label for="nh" class="cols-sm-2 control-label">Next Hop Address</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="name" id="name"  value="{{nhh}}"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="nhport" class="cols-sm-2 control-label">Next hop port</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="nhport" id="nhport"  value="{{nhp}}"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="lp" class="cols-sm-2 control-label">Local SMTP port</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="lp" id="lp"  value="{{lp}}"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="feml" class="cols-sm-2 control-label">From email</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="feml" id="feml"  value="Enter From Email"/>
+								</div>
+							</div>
+						</div>
+
+						
+
+						<div class="form-group ">
+							<button type="button" class="btn save btn-primary btn-lg btn-block login-button">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            $('.save').click(function(){
+                var nhhost = $('#name').val();
+                var nhport = $('#nhport').val();
+                var lport = $('#lp').val();
+                $.getJSON('/saveset', {
+				  nhhost: nhhost,
+                  nhport: nhport,
+                  lport: lport
+          		},  function(data) {
+                    console.log(data);
+                  }
+                )
+            }
+            );
+        </script>
+	</body>
+</html>
