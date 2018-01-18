@@ -8,4 +8,4 @@ import elastic
 #print os.path.abspath(os.path.dirname("process/a.zip"))
 #plugins.Decryptzip('/home/vladib/mail/mail.zip','1')
 l = socket.gethostbyname(socket.gethostname())
-elastic.WriteConfig('dd')
+elastic.WriteES('dd','tt',3434,2)

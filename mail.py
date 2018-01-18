@@ -50,6 +50,7 @@ def extractAttachment(msg, dirname, uuid):
     base_url = '''http://%s:4000/''' % lip
     FlagLink = False
     kuku = False
+    
     #print msg.get_payload()
     for msgrep in msg.walk():
         i = 0
@@ -60,7 +61,8 @@ def extractAttachment(msg, dirname, uuid):
             q_att = []
             for attachment in payload:
                 print attachment.get_content_type()
-                if "html" in attachment.get_content_type():    
+                if "html" in attachment.get_content_type():
+               
                     if FlagLink:
                         hhh = attachment.get_payload()
                         a = hhh.split("</head>")
@@ -75,14 +77,17 @@ def extractAttachment(msg, dirname, uuid):
                         winmail = TNEF(file_buf)
                         for att in winmail.attachments:
                             print att.name
-
-                    f = writeFile(att_name, attachment,dirname)
-                    a = Decrypt.Check_Encryption(f)
+                            f = writeFile(att.name, att.data,dirname)
+                            a = Decrypt.Check_Encryption(f,uuid)
+                    else:
+                        f = writeFile(att_name, attachment.get_payload(decode=True),dirname)
+                        pf , a = Decrypt.Check_Encryption(f,uuid)
+                    
                     if not a:
                         file_buf = attachment.get_payload(decode=True)
                         res = clamcheck_buf(file_buf)
                         print str(res).lower()
-                        if "encrypted" not in str(res).lower():
+                        if  pf or  "encrypted" not in str(res).lower():
                             newpayload.append(attachment)
                         else:
                             q_att.append(att_name)
@@ -107,23 +112,6 @@ def clamcheck(file):
     ret = cd.scan_stream(open(file))
     return ret
 
-def ModHtml(uuid,msg):
-    for msgrep in msg.walk():
-        if msgrep.is_multipart():
-            payload=msgrep.get_payload()
-            for attachment in payload:
-                if "html" in attachment.get_content_type():    
-                    try:
-                        hhh = attachment.get_payload()
-                        soup = bs4.BeautifulSoup(hhh)
-                        new_link = soup.new_tag("a", href="hhttp://192.168.204.131:4000/" + str(uuid) + "/show")
-                        new_link.string = "LINK"
-                        soup.head.append(new_link)
-                        attachment.set_payload(str(soup))
-                        return msg
-                    except Exception as e:
-                        print e.message
-                        return msg
 
 def clamcheck_buf(buf):
     cd = pyclamd.ClamdNetworkSocket('127.0.0.1',3310)
@@ -137,7 +125,7 @@ def printIT(m, filename):
 def writeFile(filename, payload , dirname):
     try:
         file_location = dirname + '/' + filename
-        open(file_location, 'wb').write(payload.get_payload(decode=True))
+        open(file_location, 'wb').write(payload)
     except (TypeError, IOError):
         pass
     return file_location

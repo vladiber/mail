@@ -10,6 +10,7 @@ from email.mime.base import MIMEBase
 from email.message import Message
 import magic
 import pyclamd
+from  try_pass import DbPass
 app = Flask(__name__)
 
 Gid = 0
@@ -49,7 +50,9 @@ def check():
     res,clamres = Decrypt.Decrypt_file(file_loc,p)
 
     if res == True:
-        
+        m = elastic.GetMail(Gid)
+        db = DbPass()
+        db.insert_pass(m.mail_from,m.mail_to[0],p)
         elastic.UpdateTags("Decrypted " ,Gid)
         
         if "FOUND" in str(clamres):
